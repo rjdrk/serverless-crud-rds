@@ -19,7 +19,7 @@ provider:
   environment:
     RDS_HOST: 'rds-serverless.cd6vxzssnfbb.us-east-1.rds.amazonaws.com'
     RDS_USER: 'admin'
-    RDS_PASSWORD: '$Diaro2024.'
+    RDS_PASSWORD: {ssm:/SECRET_PASSWORD}
     RDS_PORT: '3306'
     RDS_DATABASE: 'RDSserverless'
 
