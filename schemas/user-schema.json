@@ -1,0 +1,18 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "usuarios",
+    "type": "object",
+    "required": ["usuario", "nombre"],
+    "properties": {
+      "usuario": {
+        "type": "string",
+        "description": "Nombre de usuario.",
+        "default": ""
+      },
+      "nombre": {
+        "description": "Nombre de usuario.",
+        "type": "string",
+        "default": ""
+      }
+    }
+  }

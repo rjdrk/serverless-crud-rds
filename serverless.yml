@@ -6,11 +6,107 @@ service: serverless-crud-rds
 provider:
   name: aws
   runtime: nodejs20.x
+  vpc:
+    securityGroupIds:
+      - sg-0d54b5c736e1b7874
+    subnetIds:
+      - subnet-00ff8dea402dd5b12
+      - subnet-0b4bf627601aeb66f
+      - subnet-0a7e1e9bf465e14bc
+      - subnet-0c9f47246930bcbdb
+      - subnet-04c7d3250a3b2849c
+      - subnet-0d5653d2016572ea0
+  environment:
+    RDS_HOST: 'rds-serverless.cd6vxzssnfbb.us-east-1.rds.amazonaws.com'
+    RDS_USER: 'admin'
+    RDS_PASSWORD: '$Diaro2024.'
+    RDS_PORT: '3306'
+    RDS_DATABASE: 'RDSserverless'
+
+plugins:
+  - serverless-offline
+  - serverless-prune-plugin
+  - serverless-plugin-include-dependencies
+
+custom:
+  prune:
+    automatic: true
+    number: 3
+
+package:
+  individually: true
+  patterns:
+    - "!*/**"
+    - "!**"
+  exclude:
+    - node_modules/**
 
 functions:
-  hello:
-    handler: handler.hello
+  RDSTestconnection:
+    handler: RDSTestconnection/handler.RDSTestconnection
+    package:
+      patterns:
+        - "RDSTestconnection/handler.js"
+        - "helper/connection.js"
     events:
-      - httpApi:
-          path: /
+      - http:
+          path: /user/RDSTestconnection
           method: get
+  RDScreate:
+    handler: RDScreate/handler.RDScreate
+    package:
+      patterns:
+        - "RDScreate/handler.js"
+        - "helper/connection.js"
+    events:
+      - http:
+          path: /user/RDScreate
+          method: post
+          request:
+            schemas:
+              application/json: ${file(schemas/user-schema.json)}
+  RDSread:
+    handler: RDSread/handler.RDSread
+    package:
+      patterns:
+        - "RDSread/handler.js"
+        - "helper/connection.js"
+    events:
+      - http:
+          path: /user/RDSread/{id}
+          method: get
+          request:
+            parameters:
+              paths:
+                id: true
+  RDSupdate:
+    handler: RDSupdate/handler.RDSupdate
+    package:
+      patterns:
+        - "RDSupdate/handler.js"
+        - "helper/connection.js"
+    events:
+      - http:
+          path: /user/RDSupdate/{id}
+          method: put
+          request:
+            parameters:
+              paths:
+                id: true
+            schemas:
+              application/json: ${file(schemas/user-schema.json)}
+  RDSdelete:
+    handler: RDSdelete/handler.RDSdelete
+    package:
+      patterns:
+        - "RDSdelete/handler.js"
+        - "helper/connection.js"
+    events:
+      - http:
+          path: /user/RDSdelete/{id}
+          method: delete
+          request:
+            parameters:
+              paths:
+                id: true
+          
